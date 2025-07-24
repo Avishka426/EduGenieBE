@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
+import courseRoutes from './routes/courseRoutes';
 import { requestLogger, errorLogger } from './middleware/logger';
 
 // Load environment variables
@@ -37,6 +38,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/courses', courseRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

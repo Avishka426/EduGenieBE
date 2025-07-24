@@ -15,6 +15,10 @@ export interface AuthRequest extends Request {
     user?: User;
 }
 
+export interface AuthenticatedRequest extends Request {
+    user?: User;
+}
+
 export interface LoginRequest {
     email: string;
     password: string;
