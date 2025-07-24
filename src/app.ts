@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/database';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
+import { requestLogger, errorLogger } from './middleware/logger';
 
 // Load environment variables
 dotenv.config();
@@ -13,6 +14,9 @@ const PORT = process.env.PORT || 3000;
 
 // Connect to Database
 connectDB();
+
+// Request logging middleware (add before other middleware)
+app.use(requestLogger);
 
 // Middleware
 app.use(cors({
@@ -107,11 +111,18 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     });
 });
 
+// Add error logging middleware
+app.use(errorLogger);
+
 app.listen(PORT, () => {
+    console.log('\n' + '🎯'.repeat(50));
     console.log(`🚀 EduGenie Backend server running on port ${PORT}`);
     console.log(`📊 Health check: http://localhost:${PORT}/health`);
     console.log(`📖 API docs: http://localhost:${PORT}/api`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔍 Real-time request/response logging: ENABLED`);
+    console.log('🎯'.repeat(50) + '\n');
+    console.log('⏳ Waiting for requests...\n');
 });
 
 export default app;

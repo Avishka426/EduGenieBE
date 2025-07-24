@@ -14,22 +14,18 @@ export const connectDB = async (): Promise<void> => {
         console.log('Attempting to connect to MongoDB...');
         console.log('URI (masked):', mongoURI.replace(/\/\/[^:]+:[^@]+@/, '//***:***@'));
 
-        const conn = await mongoose.connect(mongoURI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            authSource: 'admin',
-            dbName: 'edugenie',
-            retryWrites: true,
-            w: 'majority',
-            maxPoolSize: 10,
-            serverSelectionTimeoutMS: 5000,
-            socketTimeoutMS: 45000,
-            family: 4 // Use IPv4, skip trying IPv6
-        });
+        // Set mongoose options to avoid deprecation warnings
+        mongoose.set('useNewUrlParser', true);
+        mongoose.set('useUnifiedTopology', true);
+        mongoose.set('useCreateIndex', true);
+        mongoose.set('useFindAndModify', false);
+
+        // Connect with basic options for Mongoose 5.x
+        await mongoose.connect(mongoURI);
         
-        console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-        console.log(`📊 Database: ${conn.connection.name}`);
-        console.log(`🔐 Connection state: ${conn.connection.readyState}`);
+        console.log(`✅ MongoDB Connected: ${mongoose.connection.host}`);
+        console.log(`📊 Database: ${mongoose.connection.name}`);
+        console.log(`🔐 Connection state: ${mongoose.connection.readyState}`);
         
         // Handle connection events
         mongoose.connection.on('error', (err) => {

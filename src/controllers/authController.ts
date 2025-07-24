@@ -132,6 +132,21 @@ export class AuthController {
         }
     }
 
+    // Logout user (invalidate token on client side)
+    async logout(req: Request, res: Response): Promise<void> {
+        try {
+            // In a simple JWT implementation, logout is handled client-side
+            // by removing the token from storage
+            res.status(200).json({ 
+                message: 'Logout successful',
+                instructions: 'Please remove the token from client storage'
+            });
+        } catch (error) {
+            console.error('Logout error:', error);
+            res.status(500).json({ message: 'Error during logout' });
+        }
+    }
+
     // Generate JWT token
     private generateToken(userId: string, email: string, role: string): string {
         return jwt.sign(
