@@ -5,6 +5,7 @@ import { connectDB } from './config/database';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import courseRoutes from './routes/courseRoutes';
+import profileRoutes from './routes/profileRoutes';
 import { requestLogger, errorLogger } from './middleware/logger';
 
 // Load environment variables
@@ -39,6 +40,9 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/profile', profileRoutes);
+// Alternative profile routes under auth for convenience
+app.use('/api/auth/profile', profileRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

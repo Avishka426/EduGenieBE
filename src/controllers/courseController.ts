@@ -502,6 +502,13 @@ export class CourseController {
             const userId = req.user?._id;
             const userRole = req.user?.role;
 
+            // Debug logging
+            console.log('🔍 DEBUG - getCourseEnrolledStudents:');
+            console.log('  Course ID:', id);
+            console.log('  User ID from token:', userId);
+            console.log('  User role:', userRole);
+            console.log('  User object:', req.user);
+
             // Check if user is instructor or admin
             if (userRole !== 'instructor' && userRole !== 'admin') {
                 res.status(403).json({ message: 'Access denied' });
@@ -518,12 +525,33 @@ export class CourseController {
                 return;
             }
 
+            // Debug logging for course details
+            console.log('  Course instructor ID:', course.instructor);
+            console.log('  Course instructor _id:', (course.instructor as any)?._id);
+            console.log('  Course instructor _id toString():', (course.instructor as any)?._id?.toString());
+            console.log('  User ID toString():', userId?.toString());
+            console.log('  Are they equal?:', (course.instructor as any)?._id?.toString() === userId?.toString());
+
             // Check if user is the instructor or admin
-            if (userRole !== 'admin' && course.instructor.toString() !== userId?.toString()) {
-                res.status(403).json({ message: 'You can only view students for your own courses' });
+            // Fix: Since instructor is populated, we need to access the _id property
+            const courseInstructorId = (course.instructor as any)?._id?.toString();
+            if (userRole !== 'admin' && courseInstructorId !== userId?.toString()) {
+                console.log('❌ Authorization failed - instructor ID mismatch');
+                
+                res.status(403).json({ 
+                    message: 'You can only view students for your own courses',
+                    debug: {
+                        courseInstructorId: courseInstructorId,
+                        userIdFromToken: userId?.toString(),
+                        userRole: userRole,
+                        suggestion: 'Check if you are logged in as the correct instructor who created this course'
+                    }
+                });
                 return;
             }
 
+            console.log('✅ Authorization passed - returning enrolled students');
+            
             res.status(200).json({
                 course: {
                     id: course._id,
@@ -540,7 +568,7 @@ export class CourseController {
                 }))
             });
         } catch (error) {
-            console.error('Get course enrolled students error:', error);
+            console.error('❌ Get course enrolled students error:', error);
             res.status(500).json({ message: 'Error fetching enrolled students' });
         }
     }
