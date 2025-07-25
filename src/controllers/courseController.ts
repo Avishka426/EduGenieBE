@@ -300,8 +300,36 @@ export class CourseController {
                     updatedAt: updatedCourse!.updatedAt
                 }
             });
-        } catch (error) {
+        } catch (error: any) {
             console.error('Update course error:', error);
+            
+            // Handle validation errors with more specific messages
+            if (error.name === 'ValidationError') {
+                const validationErrors = Object.values(error.errors).map((err: any) => {
+                    if (err.path === 'status') {
+                        return `Status must be one of: "Draft", "Published", "Archived" (case-sensitive). You sent: "${err.value}"`;
+                    }
+                    if (err.path === 'level') {
+                        return `Level must be one of: "Beginner", "Intermediate", "Advanced" (case-sensitive). You sent: "${err.value}"`;
+                    }
+                    if (err.path === 'category') {
+                        return `Invalid category. You sent: "${err.value}"`;
+                    }
+                    return err.message;
+                });
+                
+                res.status(400).json({ 
+                    message: 'Validation failed',
+                    errors: validationErrors,
+                    validValues: {
+                        status: ['Draft', 'Published', 'Archived'],
+                        level: ['Beginner', 'Intermediate', 'Advanced'],
+                        category: ['Programming', 'Web Development', 'Mobile Development', 'Data Science', 'Machine Learning', 'Cybersecurity', 'Cloud Computing', 'Database', 'DevOps', 'UI/UX Design', 'Business', 'Marketing', 'Other']
+                    }
+                });
+                return;
+            }
+            
             res.status(500).json({ message: 'Error updating course' });
         }
     }
