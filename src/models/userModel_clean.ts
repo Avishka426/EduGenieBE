@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
   email: string;
-  password: string;
+  password: string; 
   name: string;
   role: 'student' | 'instructor' | 'admin';
   profilePicture?: string;
