@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import courseRoutes from './routes/courseRoutes';
 import profileRoutes from './routes/profileRoutes';
+import gptRoutes from './routes/gptRoutes';
 import { requestLogger, errorLogger } from './middleware/logger';
 
 // Load environment variables
@@ -41,6 +42,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/gpt', gptRoutes);
 // Alternative profile routes under auth for convenience
 app.use('/api/auth/profile', profileRoutes);
 
@@ -70,6 +72,24 @@ app.get('/api', (req, res) => {
                 getUsersByRole: 'GET /api/users/role/:role (instructor/admin)',
                 changeUserRole: 'PUT /api/users/:id/role (admin only)',
                 deleteUser: 'DELETE /api/users/:id (admin only)'
+            },
+            gpt: {
+                recommendations: 'POST /api/gpt/recommendations (requires auth)',
+                usage: 'GET /api/gpt/usage (requires auth)',
+                popular: 'GET /api/gpt/popular (requires auth)',
+                health: 'GET /api/gpt/health (requires auth)',
+                resetCounter: 'POST /api/gpt/reset-counter (requires auth)'
+            },
+            courses: {
+                getAllCourses: 'GET /api/courses',
+                createCourse: 'POST /api/courses (instructor only)',
+                getCourseById: 'GET /api/courses/:id',
+                updateCourse: 'PUT /api/courses/:id (instructor only)',
+                deleteCourse: 'DELETE /api/courses/:id (instructor only)'
+            },
+            profile: {
+                uploadPicture: 'POST /api/profile/upload-picture (requires auth)',
+                deletePicture: 'DELETE /api/profile/delete-picture (requires auth)'
             }
         }
     });
