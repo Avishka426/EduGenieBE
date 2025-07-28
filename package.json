@@ -39,6 +39,10 @@
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Avishka426/EduGenieBE.git"
+  },
   "keywords": [
     "education",
     "course-management",

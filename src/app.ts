@@ -23,7 +23,11 @@ app.use(requestLogger);
 
 // Middleware
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:8081', // Expo default port
+    origin: [
+        process.env.CLIENT_URL || 'http://localhost:8081',
+        /\.choreoapis\.dev$/,  // Allow Choreo subdomains
+        /\.choreo\.dev$/       // Allow Choreo development domains
+    ],
     credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
