@@ -16,7 +16,7 @@ export const uploadProfileImage = multer({
     limits: {
         fileSize: 5 * 1024 * 1024, // 5MB limit
     },
-    fileFilter: (req, file, cb) => {
+    fileFilter: (req: any, file: any, cb: any) => {
         // Check file type
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);

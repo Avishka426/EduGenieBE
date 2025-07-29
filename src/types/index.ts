@@ -13,13 +13,17 @@ export interface User {
 
 export interface AuthRequest extends Request {
     user?: User;
+    body: any;
+    params: any;
+    headers: any;
 }
 
 export interface AuthenticatedRequest extends Request {
     user?: User;
     body: any;
     params: any;
-    file?: Express.Multer.File;
+    file?: any;
+    headers: any;
 }
 
 export interface LoginRequest {
