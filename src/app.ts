@@ -34,7 +34,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Security headers
-app.use((req, res, next) => {
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
     res.header('X-Content-Type-Options', 'nosniff');
     res.header('X-Frame-Options', 'DENY');
     res.header('X-XSS-Protection', '1; mode=block');
@@ -51,7 +51,7 @@ app.use('/api/gpt', gptRoutes);
 app.use('/api/auth/profile', profileRoutes);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (req: express.Request, res: express.Response) => {
     res.status(200).json({ 
         message: 'EduGenie Backend is running!', 
         timestamp: new Date().toISOString(),
@@ -60,7 +60,7 @@ app.get('/health', (req, res) => {
 });
 
 // API info endpoint
-app.get('/api', (req, res) => {
+app.get('/api', (req: express.Request, res: express.Response) => {
     res.status(200).json({
         message: 'EduGenie API v1.0',
         endpoints: {
@@ -100,7 +100,7 @@ app.get('/api', (req, res) => {
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use('*', (req: express.Request, res: express.Response) => {
     res.status(404).json({ message: 'Route not found' });
 });
 

@@ -17,6 +17,9 @@ export interface AuthRequest extends Request {
 
 export interface AuthenticatedRequest extends Request {
     user?: User;
+    body: any;
+    params: any;
+    file?: Express.Multer.File;
 }
 
 export interface LoginRequest {
